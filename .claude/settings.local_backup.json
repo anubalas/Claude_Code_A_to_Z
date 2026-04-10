@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Websearch"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "command": "python ./.claude/hooks/pre_prompt.py"
+      }
+    ]
+  }
+}

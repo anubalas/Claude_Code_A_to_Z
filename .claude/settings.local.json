@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -S -m 10 -X POST -H \"Content-Type: application/json\" -d '{\"message\":\"Create Epics for login feature\"}' http://localhost:8000/guarded_chat)",
+      "Bash(curl -s -S -m 15 -X POST -H \"Content-Type: application/json\" -d '{\"prompt\":\"Create Epics for login feature\"}' http://localhost:8000/guarded_chat)"
+    ]
+  }
+}

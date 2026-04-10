@@ -1,0 +1,22 @@
+models:
+  - type: main
+    engine: openai
+    model: llama3
+    parameters:
+      openai_api_base: "http://localhost:11434/v1"
+      openai_api_key: "ollama"
+      temperature: 0
+
+rails:
+  dialog:
+    single_call:
+      enabled: false
+  input:
+    flows:
+      - self check input
+
+  output:
+    flows:
+      - self check output
+
+  
