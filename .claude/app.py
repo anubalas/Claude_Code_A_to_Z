@@ -1,48 +1,39 @@
-
-
 import os
 from dotenv import load_dotenv
-from nemoguardrails import RailsConfig, LLMRails
 from fastapi import FastAPI
 from pydantic import BaseModel
+from nemoguardrails import RailsConfig, LLMRails
 import uvicorn
 
-# Load environment variables
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 print("BASE_DIR:", BASE_DIR)
 
-
-# Create FastAPI app
 app = FastAPI(title="AI Governance Guardrail API")
 
-# Load guardrails config
 config = RailsConfig.from_path(os.path.join(BASE_DIR, "guardrails"))
-
-# Initialize guardrails engine
 rails = LLMRails(config, verbose=True)
 
 
-# Request schema
 class GuardrailRequest(BaseModel):
     prompt: str
 
 
-# Response schema
 class GuardrailResponse(BaseModel):
     response: str
+    blocked: bool
 
 
-# API ENDPOINT
 @app.post("/guarded_chat", response_model=GuardrailResponse)
 async def guarded_chat(request: GuardrailRequest):
 
     print("API invoked")
+    print("PROMPT:", request.prompt)
 
     try:
-
-        response = await rails.generate_async(
+        # 
+        result = await rails.check_async(
             messages=[
                 {
                     "role": "user",
@@ -51,32 +42,27 @@ async def guarded_chat(request: GuardrailRequest):
             ]
         )
 
-        explain = rails.explain()
-        explain.print_llm_calls_summary()
+        status = str(result.status).upper()
+        blocked = "BLOCKED" in status
 
-        if isinstance(response, dict):
-
-            return GuardrailResponse(
-                response=response.get("content", str(response))
-            )
+        print("STATUS:", status)
+        print("BLOCKED:", blocked)
 
         return GuardrailResponse(
-            response=str(response)
+            response="BLOCKED" if blocked else "NOT_BLOCKED",
+            blocked=blocked
         )
 
     except Exception as e:
+        print("ERROR:", str(e))
 
         return GuardrailResponse(
-            response=f"Guardrail error: {str(e)}"
+            response="BLOCKED",
+            blocked=True
         )
 
 
-# Start server
 if __name__ == "__main__":
-
-    # print("API BASE:", os.getenv("OPENAI_API_BASE"))
-    # print("API KEY:", os.getenv("OPENAI_API_KEY")[:10])
-
     print("#############################")
     print("GUARDRAIL API Server started")
     print("#############################")

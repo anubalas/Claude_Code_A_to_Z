@@ -11,6 +11,7 @@ rails:
   dialog:
     single_call:
       enabled: false
+
   input:
     flows:
       - self check input
@@ -18,5 +19,4 @@ rails:
   output:
     flows:
       - self check output
-
   

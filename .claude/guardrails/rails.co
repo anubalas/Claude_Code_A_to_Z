@@ -2,8 +2,10 @@ define flow self check input
   $allowed = execute self_check_input
   if not $allowed
     bot refuse to respond
+    stop
 
 define flow self check output
   $allowed = execute self_check_output
   if not $allowed
-    bot say "Blocked by ENTERPRISE GUARDRAIL POLICY"
+    bot refuse to respond
+    stop
