@@ -37,6 +37,7 @@ def main():
         if result.get("blocked") is True:
             print(json.dumps({
                 "decision": "block",
+                "message": "Blocked by ENTERPRISE GUARDRAIL POLICY",
                 "reason": "Blocked by ENTERPRISE GUARDRAIL POLICY",
                 "continue": False
             }))
